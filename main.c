@@ -2,9 +2,56 @@
 #include<stdlib.h>
 #include<string.h>
 #include<unistd.h>
+#include<dirent.h>
+
 #define RL_BUFSIZE 1024 // Buffer Size for Read_Line
 #define TOKEN_BUFSIZE 64 // Buffer Size for Parser
 #define TOKEN_DELIM_STR " \n\t\r\a" //Creating a list of delimiters to pass to strtok().
+
+//cd: change directory
+//args[0] = "cd" args[1] = directory ; return 1 to continue executing
+int lsh_cd(char **args)
+{
+  if (args[1] == NULL) {
+    fprintf(stderr, "lsh: expected argument to \"cd\"\n");
+  } else {
+    //chdir: a system function in <unistd.h> used to change current working directory
+    //input parameter: directory path; returns 0 on success and -1 on error
+    if (chdir(args[1]) != 0) {
+      perror("lsh");
+    }
+  }
+  return 1;
+}
+
+//ls: list directory
+//args[0]: ls
+int lsh_ls(void){
+struct dirent **namelist ;
+int n ;
+
+//scandir: scans contents of directory and stores in *namelist(array of pointers to structures of type struct dirent ) 
+//returns number of entries placed in *namelist.
+n= scandir(".", &namelist, 0, alphasort());
+if(n<0){
+    perror("scandir");
+}
+else{
+    while(n--){
+        printf("%s\n",namelist[n]->d_name);
+        free(namelist[n]);
+    }
+    free(namelist);
+}
+return 1;
+}
+
+//exit : to exit the shell
+int lsh_exit(char **args)
+{
+  exit(0);
+}
+
 char *read_line()
 {
     int bufsize = RL_BUFSIZE; // creating a buffer 
