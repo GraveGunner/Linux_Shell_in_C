@@ -52,6 +52,42 @@ int lsh_exit(char **args)
   exit(0);
 }
 
+
+//function for making a directory(folder)
+void mkDir(char *dirname)
+{
+
+    int check;
+    check = mkdir(dirname);
+    //checking if directory is created
+    if (!check)
+        printf("Directory created\n");
+    else
+    {
+        printf("Unable to create directory\n");
+        exit(1);
+    }
+    //system("dir/p");
+    return;
+}
+
+//function for removing a directory(folder)
+void rmDir(char *dirname)
+{
+    int cheack;
+    //system("dir/p");
+
+    cheack = rmdir(dirname);
+    if (!cheack)
+        printf("Directory deleted\n");
+    else
+    {
+        printf("Unable to remove directory\n");
+        getch();
+    }
+    return;
+    getch();
+}
 char *read_line()
 {
     int bufsize = RL_BUFSIZE; // creating a buffer 
@@ -94,6 +130,7 @@ char *read_line()
         }
     }
 }
+
 char **parse_line(char *line)
 {
     int bufsize = TOKEN_BUFSIZE, pos = 0;
@@ -129,6 +166,7 @@ char **parse_line(char *line)
     tokens[pos] = NULL; // NUll terminate the list of tokens
     return tokens;
 }
+
 void loop_shell()
 {
     char *line;
