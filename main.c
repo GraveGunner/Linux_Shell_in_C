@@ -41,6 +41,32 @@ void rmDir(char *dirname)
     return;
     getch();
 }
+
+char *builtin_str[] = {
+    "cd",
+    "setup",
+    "exit"
+};
+
+int num_builtins()
+{
+    return (sizeof(builtin_str)/sizeof(char**));
+}
+
+int setup(char **args)
+{
+    int i;
+    printf("\nSimple Linux Shell\n");
+    printf("Type program names and arguments, and hit enter.\n");
+    printf("The following are built in:\n");
+
+    for (i = 0; i < num_builtins(); i++)
+    {
+        printf("%s\n", builtin_str[i]);
+    }
+    return 1;
+}
+
 char *read_line()
 {
     int bufsize = RL_BUFSIZE; // creating a buffer 
@@ -124,6 +150,7 @@ void loop_shell()
 {
     char *line;
     char **args;
+    setup(args);
     int status = 0, i;
     do
     {
