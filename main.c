@@ -56,7 +56,7 @@ int num_builtins()
     return (sizeof(builtin_str)/sizeof(char**));
 }
 
-int setup(char **args)
+int setup()
 {
     int i;
     printf("\nSimple Linux Shell\n");
@@ -153,7 +153,7 @@ void loop_shell()
 {
     char *line;
     char **args;
-    setup(args);
+    setup();
     int status = 0, i;
     do
     {
