@@ -2,58 +2,72 @@
 #include<stdlib.h>
 #include<string.h>
 #include<unistd.h>
-#include<dirent.h>
-
+#include <io.h>
+#include <process.h>
+#include <conio.h>
 #define RL_BUFSIZE 1024 // Buffer Size for Read_Line
 #define TOKEN_BUFSIZE 64 // Buffer Size for Parser
 #define TOKEN_DELIM_STR " \n\t\r\a" //Creating a list of delimiters to pass to strtok().
 
-//cd: change directory
-//args[0] = "cd" args[1] = directory ; return 1 to continue executing
-int lsh_cd(char **args)
+//function for making a directory(folder)
+void mkDir(char *dirname)
 {
-  if (args[1] == NULL) {
-    fprintf(stderr, "lsh: expected argument to \"cd\"\n");
-  } else {
-    //chdir: a system function in <unistd.h> used to change current working directory
-    //input parameter: directory path; returns 0 on success and -1 on error
-    if (chdir(args[1]) != 0) {
-      perror("lsh");
+
+    int check;
+    check = mkdir(dirname);
+    //checking if directory is created
+    if (!check)
+        printf("Directory created\n");
+    else
+    {
+        printf("Unable to create directory\n");
+        exit(1);
     }
-  }
-  return 1;
+    //system("dir/p");
+    return;
 }
 
-/*
-//ls: list directory
-//args[0]: ls
-int lsh_ls(void){
-struct dirent **namelist ;
-int n ;
-
-//scandir: scans contents of directory and stores in *namelist(array of pointers to structures of type struct dirent ) 
-//returns number of entries placed in *namelist.
-n= scandir(".", &namelist, 0, alphasort());
-if(n<0){
-    perror("scandir");
-}
-else{
-    while(n--){
-        printf("%s\n",namelist[n]->d_name);
-        free(namelist[n]);
-    }
-    free(namelist);
-}
-return 1;
-}
-*/
-
-
-
-//exit : to exit the shell
-int lsh_exit(char **args)
+//function for removing a directory(folder)
+void rmDir(char *dirname)
 {
-  exit(0);
+    int cheack;
+    //system("dir/p");
+
+    cheack = rmdir(dirname);
+    if (!cheack)
+        printf("Directory deleted\n");
+    else
+    {
+        printf("Unable to remove directory\n");
+        getch();
+    }
+    return;
+    getch();
+}
+
+char *builtin_str[] = {
+    "cd",
+    "setup",
+    "exit"
+};
+
+int num_builtins()
+{
+    return (sizeof(builtin_str)/sizeof(char**));
+}
+
+int setup()
+{
+    int i;
+    printf("\nSimple Linux Shell\n");
+    printf("Type program names and arguments, and hit enter.\n");
+    printf("The following are built in:\n");
+
+    for (i = 0; i < num_builtins(); i++)
+    {
+        printf("%s\n", builtin_str[i]);
+    }
+    return 1;
 }
 
 char *read_line()
@@ -98,6 +112,7 @@ char *read_line()
         }
     }
 }
+
 char **parse_line(char *line)
 {
     int bufsize = TOKEN_BUFSIZE, pos = 0;
@@ -133,10 +148,12 @@ char **parse_line(char *line)
     tokens[pos] = NULL; // NUll terminate the list of tokens
     return tokens;
 }
+
 void loop_shell()
 {
     char *line;
     char **args;
+    setup();
     int status = 0, i;
     do
     {
