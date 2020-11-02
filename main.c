@@ -2,6 +2,9 @@
 #include<stdlib.h>
 #include<string.h>
 #include<unistd.h>
+#include <io.h>
+#include <process.h>
+#include <conio.h>
 #define RL_BUFSIZE 1024 // Buffer Size for Read_Line
 #define TOKEN_BUFSIZE 64 // Buffer Size for Parser
 #define TOKEN_DELIM_STR " \n\t\r\a" //Creating a list of delimiters to pass to strtok().
